@@ -45,5 +45,15 @@ namespace WpfImageViewer
         }
 
         #endregion
+
+        #region 公開メソッド
+        public void OpenDirectory()
+        {
+            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+            {
+
+            }
+        }
+        #endregion
     }
 }
