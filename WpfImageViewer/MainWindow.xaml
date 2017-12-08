@@ -4,9 +4,70 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfImageViewer"
+        xmlns:common="clr-namespace:WpfImageViewer.Common"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
-    </Grid>
+        Title="WPF画像ビューアー" Height="350" Width="525">
+    <Window.DataContext>
+        <local:MainWindowViewModel/>
+    </Window.DataContext>
+    <Window.Resources>
+        <Style x:Key="listBoxThumbnailStyle" TargetType="{x:Type ListBox}">
+            <Setter Property="MinHeight" Value="100"/>
+            <Setter Property="Padding" Value="5"/>
+        </Style>
+    </Window.Resources>
+    <DockPanel>
+        <!--操作パネル-->
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <GroupBox Header="操作" Margin="5">
+                <Button Name="buttonOpen" Content="開く" Click="buttonOpen_Click" Margin="15,5"/>
+            </GroupBox>
+            <GroupBox Header="拡大/縮小" Margin="5">
+                <StackPanel Orientation="Horizontal" Margin="15,5">
+                    <TextBlock Text="{Binding ElementName=sliderZoom,Path=Value,StringFormat=0.0倍：}"/>
+                    <Slider Name="sliderZoom" Value="1.0" Minimum="0.1" Maximum="5.0" Width="75"/>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="回転" Margin="5">
+                <StackPanel Orientation="Horizontal" Margin="15,5">
+                    <TextBlock Text="{Binding ElementName=sliderRotate,Path=Value,StringFormat=000度：}"/>
+                    <Slider Name="sliderRotate" Minimum="0" Maximum="360" Width="75" SmallChange="1" LargeChange="90"/>
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
+        <!--サムネイル表示用-->
+        <ListBox DockPanel.Dock="Top"
+                 ItemsSource="{Binding Images}"
+                 Style="{StaticResource listBoxThumbnailStyle}"
+                 IsSynchronizedWithCurrentItem="True">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Image Margin="5" Width="90" Height="90" Source="{Binding Path}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                    <!--<VirtualizingStackPanel Orientation="Horizontal"/>-->
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            
+        </ListBox>
+        <!--画像表示-->
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="DarkGray">
+            <Image Source="{Binding Images/Path}" Stretch="None">
+                <Image.LayoutTransform>
+                    <TransformGroup>
+                        <!--拡大縮小-->
+                        <ScaleTransform 
+                            ScaleX="{Binding ElementName=sliderZoom,Path=Value}"
+                            ScaleY="{Binding ElementName=sliderZoom,Path=Value}"/>
+                        <!--回転-->
+                        <RotateTransform
+                            Angle="{Binding ElementName=sliderRotate,Path=Value}"/>
+                    </TransformGroup>
+                </Image.LayoutTransform>
+            </Image>
+        </ScrollViewer>
+    </DockPanel>
 </Window>

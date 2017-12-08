@@ -51,7 +51,14 @@ namespace WpfImageViewer
         {
             using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
             {
+                if (dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                {
+                    // OK以外は何もしない
+                    return;
+                }
 
+                // Imagesプロパティを、選択された画像のリストに更新する
+                this.Images = ImageUtils.GetImages(dialog.SelectedPath, App.Current.SupportExts);
             }
         }
         #endregion

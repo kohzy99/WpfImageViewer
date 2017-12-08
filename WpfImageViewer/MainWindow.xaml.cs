@@ -24,5 +24,19 @@ namespace WpfImageViewer
         {
             InitializeComponent();
         }
+
+        /// <summary>
+        /// このウィンドウに関連付けられたビューモデルを取得します。
+        /// </summary>
+        public MainWindowViewModel Model
+        {
+            get { return DataContext as MainWindowViewModel; }
+        }
+
+        private void buttonOpen_Click(object sender, RoutedEventArgs e)
+        {
+            // ViewModelに委譲する
+            this.Model.OpenDirectory();
+        }
     }
 }
